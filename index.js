@@ -7,7 +7,6 @@ require("dotenv").config();
 const app = express();
 const PORT = 3000;
 
-//mongodb connection
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -18,19 +17,19 @@ db.once("open", () => {
     console.log("Connected to MongoDB");
 });
 
-// Set up file storage
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/"); // Store files in the 'uploads' directory
+        cb(null, "uploads/"); 
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+        cb(null, Date.now() + path.extname(file.originalname)); 
     },
 });
 
 const upload = multer({ storage });
 
-// Define file schema and model
+
 const fileSchema = new mongoose.Schema({
     filename: String,
     path: String,
@@ -40,7 +39,7 @@ const fileSchema = new mongoose.Schema({
 
 const File = mongoose.model("File", fileSchema);
 
-// Handle file upload
+
 app.post("/upload", upload.array("files"), async (req, res) => {
     try {
         const files = req.files.map((file) => ({
